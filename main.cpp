@@ -1,5 +1,4 @@
 #include<bits/stdc++.h>
-#include<string>
 using namespace std;
 
 //Creating DEVICE-class
@@ -118,12 +117,12 @@ int main() {
   int c1, c2;
   string SD_Data;
   string sourceDevice, destinationDevice;
-  cout<<"Choose your Choice? :"<<endl;
+  cout<<"What's your Choice?  :"<<endl;
   cout<<"1: PhysicalLayer  2: DataLinkLayer " <<endl;
   cin>>c1;
   switch(c1) {
     case 1: {
-      //This case is of PhysicalLayer
+      //Implementation of PhysicalLayer
       deviceInfo();
       cout<<"Devices we have: dev1, dev2, dev3, dev4, dev5"<<endl;
       cout<<"Choose SourceDevice: "<<endl;
@@ -170,7 +169,7 @@ int main() {
       }
 
       //DevicesData in the initialState
-		cout<<" DevicesData before Transmission: "<<endl;
+		cout<<"DevicesData before Transmission: "<<endl;
     cout<<"dev1 data before Transmission:    "<<dev1.data<<endl;
 		cout<<"dev2 data before Transmission:    "<<dev2.data<<endl;
 		cout<<"dev3 data before Transmission:    "<<dev3.data<<endl;
@@ -259,7 +258,7 @@ int main() {
             {
               dev5.setData(SD_Data);
             }
-            cout<<" DevicesData after Transmission: "<<endl;
+            cout<<"DevicesData after Transmission: "<<endl;
             cout<<"dev1 data after Transmission:    "<<dev1.data<<endl;
             cout<<"dev2 data after Transmission:    "<<dev2.data<<endl;
             cout<<"dev3 data after Transmission:    "<<dev3.data<<endl;
@@ -273,6 +272,100 @@ int main() {
         }
       }
       break;
+    }
+    case 2: {
+      //Implementation of DataLinkLayer
+      int c3;
+      cout<<"What's your Choice? :"<<endl;
+      cout<<"1: HubSwitchHub-Configuration 2: SwitchDevice-Configuration "<<endl;
+      cin>>c3;
+      switch(c3) {
+        case 1: {
+          //Implementation of HubSwitchHub-Configuration
+          cout<<"HubSwitchHub-Configuration is not yet completed"<<endl;
+          break;
+        }
+        case 2: {
+          //Implementation of SwitchDevice-Configuration
+          int SourceDevice2,destinationDevice2,extra,TotDevices,count=1,bridge_count=0;
+          string data3;
+          cout<<"Switch is Created "<<endl;
+          cout<<"Give total number of end devices: "<<endl;
+          //Total number of end devices
+          cin>>TotDevices;
+          while(count) {
+            cout<<"Choose source from 1,2,3: "<<endl;
+            cin>>SourceDevice2;
+            cout<<"Choose Destination from 1,2,3 (shouldn't be same as Source): "<<endl;
+            cin>>destinationDevice2;
+            cout<<"Enter Data to do transmission: "<<endl;
+            cin>>data3;
+            bridge_count++;
+            //DataLink Part
+            //SourceDevice and destinationDevice are from 1,2,3
+            Device d[TotDevices];
+            //first time forwards ARP request to all ports to get mac of all
+            if(bridge_count == 1) {
+              for(int i=0;i<TotDevices;i++) {
+                d[i].setMACaddress(i+500);
+              }
+              clock_t start;
+              double time_taken;
+              start = clock();
+              for(int j=0; j<TotDevices; j++){
+                if (j==SourceDevice2-1) {
+                  continue;
+                }
+                for(int i=0;i<data3.length();i++) {
+                    d[destinationDevice2-1].data+=data3[i];
+                        if(j==destinationDevice2-1) {
+                          cout<<"Received frame number: "<<(i+1)<<" at The Destination "<<j+1<<endl;
+                          cout<<"Received frame number: "<<(i+1)<<endl;
+                          cout<<"The source "<<SourceDevice2<<" received the ACK"<<endl;
+                        }
+                        else {
+                          break;
+                        }
+                    }
+                }
+              time_taken = ( clock() - start) / (double) CLOCKS_PER_SEC;
+              cout<<"Total Time Taken for Transmission: "<< time_taken <<endl;
+              cout<<"Broadcast domain = 1 and Collision domain = "<<TotDevices;
+            }
+            else {
+              //now source know which port connected to which so direct transmission
+	          	//look up in table and forward frame to destination
+              clock_t start; 
+              double time_taken;
+              start = clock();
+              for(int j=0; j<TotDevices; j++) {
+                if(destinationDevice2 == j+1) {
+                  for(int i=0;i<data3.length();i++) {
+                    d[destinationDevice2-1].data+= data3[i];
+                    if(j==destinationDevice2-1) {
+                      cout<<"Received frame number: "<<(i+1)<<" at The Destination "<<(j+1)<<endl;
+                      cout<<"The source "<<SourceDevice2<<" received the ACK "<<endl;
+                    } else {
+                      break;
+                    }
+                  }
+                }
+              }
+              time_taken = (clock() - start ) / (double) CLOCKS_PER_SEC;
+            	cout<<"Total Time Taken for Transmission: "<< time_taken <<endl;
+		          cout<<"Broadcast domain = 1 and Collision domain = "<<TotDevices<<endl;
+            }
+            cout<<endl;
+            cout<<"Enter any key greater than 0 if you want to do more transmission: "<<endl;
+            cin>>extra;
+            if(extra<=0) {
+              count = 0;
+            }
+          }
+          //SwitchDeviceConfigurationCompleted
+          break;
+        }
+      }
     }
   }
   return 0;
