@@ -1,12 +1,14 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+//A cyclic redundancy check (CRC) Class
 class CRC {
   string input, divisor, divident, result;
   int len_divident, len_gen, len_inp;
-
+  //A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.
   public: 
 
+    //Function for doing XOR
     string fun_xor(string a, string b) {
       string result = "";
       if(a[0] == '0') {
@@ -19,6 +21,7 @@ class CRC {
       }
     }
 
+    //Function to get Modulo
     void modulo_div() {
       string temp_div = divisor;
       string temp_divident = divident.substr(0, len_gen);
@@ -31,6 +34,7 @@ class CRC {
       result = input + fun_xor(temp_divident, temp_div);
     }
 
+    //Function to GetData From the User
     void getdata() {
       cout<<"Enter Source Input: "<<endl;
       cin>>input;
@@ -49,6 +53,7 @@ class CRC {
       modulo_div();
     }
 
+    //function showing SenderSide-Info
     void sender_side() {
       cout<<"Input: "<<input<<endl;
       cout<<"Polynomial: "<<divisor<<endl;
@@ -56,9 +61,10 @@ class CRC {
       cout<<"Data to send: "<<result<<endl;
     }
 
+    //function showing receiverSide-Info
     void receiver_side() {
       string data_rec;
-      cout<<"Enter Daata Received: "<<endl;
+      cout<<"Enter Data Received: "<<endl;
       cin>>data_rec;
 
       string temp_div =  divisor;
@@ -70,7 +76,7 @@ class CRC {
         j++;
       }
       string error = fun_xor(temp_divident, temp_div);
-      cout<<"Remainder is: "<<error;
+      cout<<"Remainder is: "<<error<<endl;
 
       bool flag = 0;
       for(int i=0;i<len_gen-1;i++) {
@@ -80,13 +86,11 @@ class CRC {
         }
       }
       if(flag == 0) {
-        cout<<"Correct  Data Received Without Any Error" <<endl;
+        cout<<"Correct Data Received Without Any Error" <<endl;
       } else {
         cout<<"Data Received Contain Some Error"<<endl;
       }
     }
-
-
 };
 
 
@@ -366,7 +370,7 @@ int main() {
       //Implementation of DataLinkLayer
       int c3;
       cout<<"What's your Choice? :"<<endl;
-      cout<<"1: HubSwitchHub-Configuration 2: SwitchDevice-Configuration "<<endl;
+      cout<<"1: HubSwitchHub-Configuration 2: SwitchDevice-Configuration 3: CRC"<<endl;
       cin>>c3;
       switch(c3) {
         case 1: {
@@ -452,6 +456,14 @@ int main() {
             }
           }
           //SwitchDeviceConfigurationCompleted
+          break;
+        }
+        case 3: {
+          //A cyclic redundancy check
+          CRC crc;
+          crc.getdata();
+          crc.sender_side();
+          crc.receiver_side();
           break;
         }
       }
