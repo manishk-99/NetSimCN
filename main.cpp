@@ -1,6 +1,95 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+class CRC {
+  string input, divisor, divident, result;
+  int len_divident, len_gen, len_inp;
+
+  public: 
+
+    string fun_xor(string a, string b) {
+      string result = "";
+      if(a[0] == '0') {
+        return a.substr(1);
+      } else {
+        for(int i=0;i<len_gen;i++) {
+          result = result + (a[i] == b[i] ? '0' : '1');
+        }
+        return result.substr(1);
+      }
+    }
+
+    void modulo_div() {
+      string temp_div = divisor;
+      string temp_divident = divident.substr(0, len_gen);
+      int j = len_gen;
+      while(j < len_divident) {
+        temp_divident = fun_xor(temp_divident, temp_div);
+        temp_divident = temp_divident + divident[j];
+        j++;
+      }
+      result = input + fun_xor(temp_divident, temp_div);
+    }
+
+    void getdata() {
+      cout<<"Enter Source Input: "<<endl;
+      cin>>input;
+      cout<<"Enter Coefficients of generator polynomial: "<<endl;
+      cin>>divisor;
+
+      len_gen = divisor.length();
+      len_inp = input.length();
+      divident = input;
+      int r = len_gen-1;
+
+      for(int i=0;i<r;i++) {
+        divident = divident + '0';
+      }
+      len_divident = divident.length();
+      modulo_div();
+    }
+
+    void sender_side() {
+      cout<<"Input: "<<input<<endl;
+      cout<<"Polynomial: "<<divisor<<endl;
+      cout<<"Divident: "<<divident<<endl;
+      cout<<"Data to send: "<<result<<endl;
+    }
+
+    void receiver_side() {
+      string data_rec;
+      cout<<"Enter Daata Received: "<<endl;
+      cin>>data_rec;
+
+      string temp_div =  divisor;
+      string temp_divident = data_rec.substr(0, len_gen);
+      int j = len_gen;
+      while(j < data_rec.length()) {
+        temp_divident = fun_xor(temp_divident, temp_div);
+        temp_divident = temp_divident + data_rec[j];
+        j++;
+      }
+      string error = fun_xor(temp_divident, temp_div);
+      cout<<"Remainder is: "<<error;
+
+      bool flag = 0;
+      for(int i=0;i<len_gen-1;i++) {
+        if(error[i] == '1') {
+          flag = 1;
+          break;
+        }
+      }
+      if(flag == 0) {
+        cout<<"Correct  Data Received Without Any Error" <<endl;
+      } else {
+        cout<<"Data Received Contain Some Error"<<endl;
+      }
+    }
+
+
+};
+
+
 //Creating DEVICE-class
 class Device
 {
